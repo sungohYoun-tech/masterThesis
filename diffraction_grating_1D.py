@@ -38,3 +38,51 @@ if __name__ == '__main__':
     # Get the diffraction efficiencies R and T and overall reflection and transmission coefficients R and T
     (R, T, RTot, TTot) = (results['R'], results['T'], results['RTot'], results['TTot'])
     print(RTot, TTot, RTot+TTot)
+
+    # ------------------------------------------------------------------
+    # ADDED: Amplitude, Phase, and Polarization Analysis for 0th Order
+    # ------------------------------------------------------------------
+
+    # 1. Find the index for the 0th order harmonic (Direct transmission)
+    # The harmonics array is centered, so the middle index corresponds to the 0th order.
+    center_index = len(txCalculated) // 2
+
+    # 2. Extract the complex Electric Field (E-field) for the 0th order
+    Ex_0 = txCalculated[center_index]
+    Ey_0 = tyCalculated[center_index]
+
+    # 3. Calculate Amplitude (Magnitude of the complex number)
+    # Intensity is proportional to Amplitude squared (|E|^2)
+    amp_x = np.abs(Ex_0)
+    amp_y = np.abs(Ey_0)
+
+    # 4. Calculate Phase (Angle of the complex number)
+    # Returns the phase in radians between -pi and pi
+    phase_x = np.angle(Ex_0)
+    phase_y = np.angle(Ey_0)
+
+    # 5. Polarization Analysis (Ellipsometry Parameters)
+    # Delta (Phase Difference): difference between X and Y phase
+    delta = phase_x - phase_y
+    
+    # Psi (Amplitude Ratio Angle): arctan of the ratio of amplitudes
+    # This represents the polarization rotation/ellipticity
+    psi = np.arctan(amp_x / amp_y)
+
+    # --- Print the calculated results ---
+    print("\n" + "="*40)
+    print(" ANALYSIS RESULTS (0th Order Transmission)")
+    print("="*40)
+    
+    print(f"[Amplitude]")
+    print(f"  Ex Amplitude (|Ex|): {amp_x:.6f}")
+    print(f"  Ey Amplitude (|Ey|): {amp_y:.6f}")
+    
+    print(f"\n[Phase]")
+    print(f"  Ex Phase: {phase_x:.4f} rad ({np.degrees(phase_x):.2f} deg)")
+    print(f"  Ey Phase: {phase_y:.4f} rad ({np.degrees(phase_y):.2f} deg)")
+
+    print(f"\n[Polarization State]")
+    print(f"  Phase Difference (Delta): {delta:.4f} rad ({np.degrees(delta):.2f} deg)")
+    print(f"  Amplitude Ratio Angle (Psi): {psi:.4f} rad ({np.degrees(psi):.2f} deg)")
+    print("="*40)
